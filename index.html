@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Geometry Dash Web</title>
+</head>
+<body>
+<style>
+      canvas {
+  background-color: black;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  overflow: hidden;
+  background-color: #ff4967;
+}
+
+#menu-GeoDash {
+  display: flex;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+#containerTitle-GeoDash {
+  position: absolute;
+  top: 10px;
+  text-align: center;
+}
+#title-GeoDash {
+  font-size: 50px;
+  color: green;
+  text-shadow: 2px 2px 4px black;
+  display: inline-block;
+  position: relative;
+  font-weight: bold;
+  margin: 0;
+  white-space: nowrap;
+}
+#lite-GeoDash {
+  position: absolute;
+  right: 25px;
+  bottom: -35%;
+  font-size: 25px;
+  color: #afaf00;
+}
+#menuButtons-GeoDash {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: row;
+  box-sizing: border-box;
+  position: absolute;
+  top: 40%;
+}
+.menuButton-GeoDash {
+  width: 80px;
+  height: 80px;
+  margin: 0 20px;
+  background-color: #4caf50;
+  border: 3px solid #000000;
+  border-radius: 15px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  flex-direction: column;
+  position: relative;
+  transition: all 0.2s;
+}
+.menuButton-GeoDash.play {
+  width: 90px;
+  height: 90px;
+}
+.menuButton-GeoDash:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
+}
+.menuButton-GeoDash .icon-GeoDash {
+  font-size: 30px;
+  margin-bottom: 5px;
+}
+.menuButton-GeoDash .text-GeoDash {
+  font-size: 15px;
+  font-weight: bold;
+}
+.menuButton-GeoDash.settings .text-GeoDash {
+  color: #b5b5b5;
+}
+.menuButton-GeoDash.play .text-GeoDash {
+  color: #004501;
+}
+.menuButton-GeoDash.play .icon-GeoDash {
+  border-top: 24px solid transparent;
+  border-bottom: 24px solid transparent;
+  border-left: 34px solid black;
+  position: relative;
+}
+#iconTriangle {
+  position: absolute;
+  top: -20px;
+  left: -31.5px;
+  border-top: 20px solid transparent;
+  border-bottom: 20px solid transparent;
+  border-left: 30px solid green;
+}
+.menuButton-GeoDash.records .text-GeoDash {
+  color: #ffb834;
+}
+
+#records-GeoDash {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  z-index: 111;
+}
+#hightScoreP-GeoDash, #longestDistP-GeoDash {
+  margin: 5px;
+  font-size: 20px;
+}
+#recordsP-GeoDash {
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+#backRecords-GeoDash {
+  margin-top: 20px;
+  border: 1px solid white;
+  background-color: red;
+  color: white;
+  font-size: 15px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+#backRecords-GeoDash:hover {
+  background-color: #bb0000;
+}
+#restartButton, #backMainButton {
+  display: none;
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 10px 20px;
+  font-size: 18px;
+  cursor: pointer;
+  background-color: green;
+  color: white;
+  border: 1px solid white;
+  box-sizing: border-box;
+  transition: all 0.1s;
+  border-radius: 5px;
+}
+#backMainButton {
+  background-color: red;
+  margin-top: 60px;
+}
+#restartButton:focus-visible, #backMainButton:focus-visible {
+  outline: none;
+  box-shadow: 0 0 15px 4px green;
+  border-width: 2px;
+}
+#backMainButton:focus-visible {
+  box-shadow: 0 0 15px 4px red;
+}
+#restartButton:active {
+  background-color: #005f00;
+}
+#backMainButton:active {
+  background-color: #c20000;
+}
+
+#pauseButton {
+  position: absolute;
+  right: 10px; top: 10px;
+  font-size: 22px;
+  border: 1px solid white;
+  border-radius: 5px;
+  transition: all 0.2s;
+  padding: 0;
+  background-color: transparent;
+}
+#pauseButton:active {
+  transform: scale(0.9);
+}
+</style>
+      <div id="menu-GeoDash">
+        <div id="containerTitle-GeoDash">
+            <p id="title-GeoDash">Geometry Dash<span id="lite-GeoDash">Web</span></p>
+        </div>
+        <div id="menuButtons-GeoDash">
+            <button class="menuButton-GeoDash settings">
+                <div class="icon-GeoDash">🛠️</div>
+                <div class="text-GeoDash">Settings</div>
+            </button>
+            <button class="menuButton-GeoDash play">
+                <div class="icon-GeoDash"><div id="iconTriangle"></div></div>
+                <div class="text-GeoDash">Play</div>
+            </button>
+            <button class="menuButton-GeoDash records">
+                <div class="icon-GeoDash">🥇</div>
+                <div class="text-GeoDash">Records</div>
+            </button>
+        </div>
+      </div>
+      <div id="records-GeoDash">
+        <p id="recordsP-GeoDash">Records</p>
+        <p id="hightScoreP-GeoDash">Hight Score: <label id="hightScoreLabel-GeoDash">0%</label></p>
+        <p id="longestDistP-GeoDash">Longest Distance: <label id="longestDistLabel-GeoDash">0m</label></p>
+        <button id="backRecords-GeoDash">Back</button>
+      </div>
+<script>
+  class GeometryDash {
+    constructor(canvasId) {
+      this.canvas = document.createElement("canvas");
+      document.body.appendChild(this.canvas);
+      this.ctx = this.canvas.getContext("2d");
+      this.setCanvasSize();
+      this.initializeGameParameters();
+      window.addEventListener("resize", () => {
+        this.setCanvasSize();
+      });
+      document.addEventListener("keydown", this.handleStartGeoDash.bind(this));
+      document.addEventListener("keyup", this.handleEndGeoDash.bind(this));
+      this.canvas.addEventListener("mousedown", this.handleStartGeoDash.bind(this));
+      this.canvas.addEventListener("mouseup", this.handleEndGeoDash.bind(this));
+      this.canvas.addEventListener("touchstart", this.handleStartGeoDash.bind(this));
+      this.canvas.addEventListener("touchend", this.handleEndGeoDash.bind(this));
+      this.canvas.addEventListener("touchmove", (e) => e.preventDefault(), {passive: false});
+      this.restartButton = document.createElement("button");
+      this.restartButton.id = "restartButton";
+      this.restartButton.textContent = "Restart";
+      this.restartButton.onclick = () => this.restartGame();
+      document.body.appendChild(this.restartButton);
+      this.restartButton.style.display = "none";
+      this.backMainButton = document.createElement("button");
+      this.backMainButton.id = "backMainButton";
+      this.backMainButton.textContent = "Back Main Menu";
+      this.backMainButton.onclick = () => backMainMenu();
+      document.body.appendChild(this.backMainButton);
+      this.backMainButton.style.display = "none";
+
+      this.pauseButton = document.createElement("button");
+      this.pauseButton.id = "pauseButton";
+      this.pauseButton.textContent = "⏸️";
+      this.pauseButton.onclick = () => this.togglePause();
+      document.body.appendChild(this.pauseButton);
+      this.gameLoop();
+    }
+    setCanvasSize() {
+      this.canvas.width = window.innerWidth;
+      this.canvas.height = window.innerHeight;
+    }
+    initializeGameParameters() {
+      this.score = 0;
+      this.distance = 0;
+      this.gameOver = false;
+      this.gameWin = false;
+      this.gamePause = false;
+      this.isHolding = false;
+      this.obstacles = [
+        { x: 500, y: this.canvas.height - 80, width: 40, height: 40 },
+        { x: 1000, y: this.canvas.height - 80, width: 40, height: 40 },
+        { x: 1500, y: this.canvas.height - 80, width: 40, height: 40 },
+        { x: 2000, y: this.canvas.height - 80, width: 40, height: 40 }
+      ];
+      this.finishLine = 2500;
+      this.groundHeight = 40;
+      this.groundY = this.canvas.height - this.groundHeight;
+      const playerSize = 40;
+      this.gravity = 0.035 * playerSize;
+      this.jumpForce = -0.5 * playerSize;
+      this.gameSpeed = 7;
+      this.player = {
+        x: -playerSize * 3,
+        y: this.groundY - playerSize,
+        width: playerSize,
+        height: playerSize,
+        velocity: 0,
+        jumping: false,
+        canJump: false
+      };
+      this.cameraX = 0;
+    }
+    isOnGround(entity) {
+      return entity.y + entity.height >= this.groundY;
+    }
+    handleStartGeoDash(event) {
+      if (event.code == "KeyP") this.togglePause();
+      if (event.code && event.code !== "Space") return;
+      if (!this.gameWin && !this.gameOver && !this.gamePause) event.preventDefault();
+      this.isHolding = true;
+    }
+    handleEndGeoDash(event) {
+      if (event.code && event.code !== "Space") return;
+      this.isHolding = false;
+      this.player.canJump = true;
+    }
+    jump() {
+      this.player.velocity = this.jumpForce;
+      this.player.jumping = true;
+      this.player.canJump = false;
+    }
+    update() {
+      if (this.gamePause) return;
+      this.player.velocity += this.gravity;
+      this.player.y += this.player.velocity;
+      if (this.isOnGround(this.player)) {
+        this.player.y = this.groundY - this.player.height;
+        this.player.velocity = 0;
+        this.player.jumping = false;
+        this.player.canJump = true;
+      }
+      this.player.x += this.gameSpeed;
+      this.cameraX = Math.max(0, this.player.x - this.canvas.width * 0.2);
+      this.cameraX = Math.min(
+        this.cameraX,
+        this.finishLine - this.canvas.width * 0.85
+      );
+      this.obstacles.forEach((obstacle) => {
+        if (
+          this.player.x < obstacle.x + obstacle.width &&
+          this.player.x + this.player.width > obstacle.x &&
+          this.player.y < obstacle.y + obstacle.height &&
+          this.player.y + this.player.height > obstacle.y
+        ) {
+          const playerBottom = this.player.y + this.player.height;
+          const playerTop = this.player.y;
+          const playerRight = this.player.x + this.player.width;
+          const playerLeft = this.player.x;
+          const obstacleBottom = obstacle.y + obstacle.height;
+          const obstacleTop = obstacle.y;
+          const obstacleRight = obstacle.x + obstacle.width;
+          const obstacleLeft = obstacle.x;
+          const collisionFromTop = playerBottom - obstacleTop;
+          const collisionFromBottom = obstacleBottom - playerTop;
+          const collisionFromLeft = playerRight - obstacleLeft;
+          const collisionFromRight = obstacleRight - playerLeft;
+          const minCollision = Math.min(
+            collisionFromTop,
+            collisionFromBottom,
+            collisionFromLeft,
+            collisionFromRight
+          );
+          if (minCollision === collisionFromTop) {
+            this.player.y = obstacleTop - this.player.height;
+            this.player.velocity = 0;
+            this.player.jumping = false;
+            this.player.canJump = false;
+            this.gameOver = true;
+          } else if (minCollision === collisionFromBottom) {
+            this.player.y = obstacleBottom;
+            this.player.velocity = 0;
+          } else if (minCollision === collisionFromLeft) {
+            this.player.x = obstacleLeft - this.player.width;
+            this.gameOver = true;
+          } else if (minCollision === collisionFromRight) {
+            this.player.x = obstacleRight;
+            this.gameOver = true;
+          }
+        }
+      });
+      if (this.gameOver || this.gameWin) {
+        const decelerationFactor = 0.2 * (this.player.width / 30);
+        if (this.gameSpeed > 0) this.gameSpeed -= decelerationFactor;
+        if (this.gameSpeed < 0) this.gameSpeed = 0;
+        this.player.canJump = false;
+      }
+      if (this.isHolding && this.player.canJump && this.isOnGround(this.player)) {
+        this.jump();
+      }
+      this.score = Math.max(0, Math.min((this.player.x / this.finishLine) * 100, 100));
+      this.distance = Math.max(0, this.player.x / 40);
+      if (this.score > hightScore) hightScore = this.score;
+      if (this.distance > longestDistance) longestDistance = this.distance;
+    }
+    draw() {
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      this.ctx.fillStyle = "#333";
+      this.ctx.fillRect(0, this.groundY, this.canvas.width, this.groundHeight);
+      this.ctx.fillStyle = "#ff0";
+      const playerRelativeX = this.player.x - this.cameraX;
+      this.ctx.fillRect(
+        playerRelativeX,
+        this.player.y,
+        this.player.width,
+        this.player.height
+      );
+      this.obstacles.forEach((obstacle) => {
+        const relativeX = obstacle.x - this.cameraX;
+        if (relativeX + obstacle.width > 0 && relativeX < this.canvas.width) {
+          this.ctx.fillStyle = "#f00";
+          this.ctx.fillRect(
+            relativeX,
+            obstacle.y,
+            obstacle.width,
+            obstacle.height
+          );
+        }
+      });
+      this.ctx.fillStyle = '#0f0';
+      this.ctx.fillRect(0, 0, (this.score / 100) * this.canvas.width, 10);
+      const textSize = Math.min(Math.max(this.canvas.width * 0.06, 10), 30);
+      this.ctx.fillStyle = "#fff";
+      this.ctx.font = `${textSize}px Arial`;
+      this.ctx.fillText(
+        `Distance: ${Math.floor(this.distance)}m`,
+        this.canvas.width * 0.04,
+        this.canvas.height * 0.02 + textSize
+      );
+      if (
+        this.finishLine >= this.cameraX &&
+        this.finishLine <= this.cameraX + this.canvas.width
+      ) {
+        const finishX = this.finishLine - this.cameraX;
+        const finishY = this.groundY - this.canvas.height * 0.3;
+
+        this.ctx.save();
+        this.ctx.translate(finishX, finishY);
+        this.ctx.rotate(Math.PI / 2);
+        this.ctx.fillStyle = "#0f0";
+        this.ctx.font = "30px Arial";
+        this.ctx.fillText("FINISH", 0, 0);
+        this.ctx.restore();
+      }
+      let textGameToShow;
+      if (this.player.x >= this.finishLine) {
+        textGameToShow = "You Win!";
+        this.gameOver = false;
+        this.gamePause = false;
+        this.gameWin = true;
+      }
+      if (this.gamePause) textGameToShow = "Pause";
+      if (this.gameOver) textGameToShow = "Game Over!";
+      if (this.gameOver || this.gameWin || this.gamePause) {
+        this.ctx.fillStyle = "#fff";
+        this.ctx.font = `${Math.min(Math.max(this.canvas.width * 0.08, 10), 40)}px Arial`;
+        this.ctx.fillText(textGameToShow, (this.canvas.width - this.ctx.measureText(textGameToShow).width) / 2, this.canvas.height * 0.4);
+        if (this.restartButton.style.display != "block") {
+          this.restartButton.style.display = "block";
+          this.backMainButton.style.display = "block";
+          this.restartButton.focus();
+        }
+      } else if (this.restartButton.style.display == "block") {
+          this.restartButton.style.display = "none";
+          this.backMainButton.style.display = "none";
+      }
+    }
+    gameLoop() {
+      this.update();
+      this.draw();
+      requestAnimationFrame(this.gameLoop.bind(this));
+    }
+    togglePause() {
+      if (this.gameWin || this.gameOver) return;
+      if (!this.gamePause) {
+        this.enablePause();
+      } else {
+        this.disablePause();
+      }
+    }
+    enablePause() {
+      this.gamePause = true;
+      this.pauseButton.textContent = "▶️";
+    }
+    disablePause() {
+      this.gamePause = false;
+      this.pauseButton.textContent = "⏸️";
+    }
+    restartGame() {
+      this.initializeGameParameters();
+      this.gameOver = false;
+      this.gameWin = false;
+      this.gamePause = false;
+      this.disablePause();
+      this.restartButton.style.display = "none";
+      this.backMainButton.style.display = "none";
+    }
+    destroyGame() {
+      this.canvas.remove();
+      this.restartButton.remove();
+      this.backMainButton.remove();
+      this.pauseButton.remove();
+      cancelAnimationFrame(this.animationFrameId);
+    }
+  }
+  let hightScore = 0;
+  let longestDistance = 0;
+  let game;
+  const recordsGeoDash = document.getElementById("records-GeoDash");
+  const menuGeoDash = document.getElementById("menu-GeoDash");
+  document.querySelector(".menuButton-GeoDash.play").addEventListener('click', () => {
+      menuGeoDash.style.display = 'none';
+      game = new GeometryDash("gameCanvas");
+  });
+  document.querySelector(".menuButton-GeoDash.records").addEventListener('click', () => {
+      recordsGeoDash.style.display = 'flex';
+      menuGeoDash.style.display = 'none';
+      document.getElementById("hightScoreLabel-GeoDash").textContent = `${Math.floor(hightScore)}%`;
+      document.getElementById("longestDistLabel-GeoDash").textContent = `${Math.floor(longestDistance)}m`;
+  });
+  document.getElementById("backRecords-GeoDash").addEventListener('click', () => {
+      recordsGeoDash.style.display = 'none';
+      menuGeoDash.style.display = 'flex';
+  });
+  function backMainMenu() {
+    if (game) {
+      game.destroyGame();
+      game = null;
+    }
+    menuGeoDash.style.display = 'flex';
+  }
+</script>
+</body>
+</html>
